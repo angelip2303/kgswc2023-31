@@ -35,7 +35,7 @@ jobs:
       - name: Install the theme
         run:  npm i -g @slidev/theme-apple-basic
 
-      - name: Install Playright
+      - name: Install for PDF
         run: npm i -D playwright-chromium
 
       - name: Build
