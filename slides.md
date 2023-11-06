@@ -3,7 +3,7 @@ theme: apple-basic
 themeConfig:
   paginationX: r
   paginationY: t
-  paginationPagesDisabled: [1,36]
+  paginationPagesDisabled: [1,30]
 layout: intro-image
 image: /img/cover.png
 download: true
