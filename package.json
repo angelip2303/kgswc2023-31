@@ -1,0 +1,26 @@
+{
+  "name": "slides",
+  "private": true,
+  "scripts": {
+    "build": "slidev build",
+    "dev": "slidev --open",
+    "export": "slidev export"
+  },
+  "dependencies": {
+    "@slidev/cli": "^0.40.10",
+    "@slidev/theme-apple-basic": "^0.20.0"
+  },
+  "devDependencies": {
+    "@iconify-json/ri": "^1.1.10"
+  },
+  "slidev": {
+    "colorSchema": "both",
+    "highlighter": "all",
+    "defaults": {
+      "themeConfig": {
+        "paginationX": "r",
+        "paginationY": "t"
+      }
+    }
+  }
+}

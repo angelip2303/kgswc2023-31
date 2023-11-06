@@ -1,0 +1,9 @@
+figcaption {
+    font-size: 0.8em;
+    margin-top: 0.5em;
+    text-align: center;
+}
+
+figcaption span {
+    font-weight: bold;
+}
