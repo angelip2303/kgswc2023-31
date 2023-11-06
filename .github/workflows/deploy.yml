@@ -24,13 +24,13 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: "lts/*"
+          node-version: 'lts/*'
 
       - name: Install dependencies
         run: npm install
 
       - name: Install slidev
-        run: npm i -g @slidev/cli
+        run:  npm i -g @slidev/cli
 
       - name: Build
         run: slidev build --base /kgswc2023-31/
