@@ -30,27 +30,23 @@ download: true
 
 # 🗂️ Table of contents
 
-1. [Project in a nutshell](3)
-2. [Motivation](4)
-    1. [Knowledge Graphs](5)
-    2. [To put it into context...](7)
-    3. [Wikidata](8)
-    4. [How do we address that?](9)
-3. [The algorithm in a nutshell](10)
+1. [Motivation](4)
+    1. [To put it into context...](7)
+    2. [How do we address that?](9)
+2. [The algorithm in a nutshell](10)
     1. [Pregel](11)
     2. [PSchema](13)
     3. [How are Shape Expressions represented?](14)
     4. [Reverse Level order traversal](15)
     5. [The algorithm in action](16)
     6. [Resulting subgraph](26)
-    7. [Theorem](27)
-4. [Optimizations](28)
+    7. [Lemma](27)
+3. [Optimizations](28)
     1. [How is the dataset stored?](29)
     2. [Move-to-Front coding and Caching](30)
-5. [Diffusion](31)
+4. [Diffusion](31)
     1. [Results](32)
-    2. [BioHackathon 2023](34)
-    3. [Applications and Future Work](35)
+    2. [Applications and Future Work](35)
 
 <style>
 ul {
@@ -74,13 +70,13 @@ layout: section
 layout: center
 ---
 
-# 🌉 To put it in context...
+# 💡 We know...
 
 - ✅ Knowledge Graphs are a **powerful tool** to represent knowledge.
 - ✅ They are **flexible** and **extensible**.
 - ✅ They are **easy to understand** by humans.
 - ✅ They are used in **many fields**.
-- ❌ They are **hard to be validated** by machines.
+- ❌ They are **hard to be validated** by machines. Thus, how do we ensure _interoperability_?
 - ❌ They tend to be **huge**.
 
 ---
@@ -161,6 +157,7 @@ layout: two-cols-unbalanced
 - Based on a **multithreaded** Pregel.
 - Makes use of **Shape Expressions**.
 - Can validate different **Knowledge Graphs**.
+- ⚠️ _Partial support_ for **ShEx** functionalities.
 
 ## 💭 Alternatives
 
@@ -183,7 +180,7 @@ layout: diagram-header
 - A Shape Expression is represented as a 🌳.
 - Each node represents a **Shape**.
 - **Validation** is done by traversing the tree.
-- They are implemented according to their **behavior**.
+- Shapes are implemented depending on their **behavior** when being _validated_..
 
 The following is an example of a Shape Expression:
 
