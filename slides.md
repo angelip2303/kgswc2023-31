@@ -27,37 +27,15 @@ download: true
 <Pagination classNames="text-gray-300" />
 
 ---
+layout: center
+---
 
 # 🗂️ Table of contents
 
-1. [Motivation](4)
-    1. [To put it into context...](7)
-    2. [How do we address that?](9)
-2. [The algorithm in a nutshell](10)
-    1. [Pregel](11)
-    2. [PSchema](13)
-    3. [How are Shape Expressions represented?](14)
-    4. [Reverse Level order traversal](15)
-    5. [The algorithm in action](16)
-    6. [Resulting subgraph](26)
-    7. [Lemma](27)
-3. [Optimizations](28)
-    1. [How is the dataset stored?](29)
-    2. [Move-to-Front coding and Caching](30)
-4. [Diffusion](31)
-    1. [Results](32)
-    2. [Applications and Future Work](35)
-
-<style>
-ul {
-    padding: 0;
-    margin: 0;
-}
-
-li {
-    font-size: 0.7rem;
-}
-</style>
+1. [Motivation](3)
+2. [The algorithm in a nutshell](6)
+3. [Optimizations](24)
+4. [Diffusion](27)
 
 ---
 layout: section
