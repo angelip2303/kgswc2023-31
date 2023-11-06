@@ -6,7 +6,6 @@ themeConfig:
   paginationPagesDisabled: [1,30]
 layout: intro-image
 image: /img/cover.png
-download: true
 ---
 
 <div>
