@@ -15,7 +15,7 @@ image: /img/cover.png
 </div>
 
 <div>
-  	<h1 class="font-extrabold">PSchema</h1>
+  	<h1 class="font-extrabold">Creating Knowledge Graph Subsets</h1>
   	<p class="font-300">
         Using Pregel to Create Knowledge
         Graphs Subsets Described
@@ -24,17 +24,6 @@ image: /img/cover.png
 </div>
 
 <Pagination classNames="text-gray-300" />
-
----
-layout: center
----
-
-# 🗂️ Table of contents
-
-1. [Motivation](3)
-2. [The algorithm in a nutshell](6)
-3. [Optimizations](24)
-4. [Diffusion](27)
 
 ---
 layout: section
@@ -50,20 +39,18 @@ layout: center
 # 💡 We know...
 
 - ✅ Knowledge Graphs are a **powerful tool** to represent knowledge.
-- ✅ They are **flexible** and **extensible**.
-- ✅ They are **easy to understand** by humans.
-- ✅ They are used in **many fields**.
-- ❌ They are **hard to be validated** by machines. Thus, how do we ensure _interoperability_?
+- ❌ It is hard ensuring their **quality**.
 - ❌ They tend to be **huge**.
+- 💡 _Creating Subsets_ could solve both issues.
 
 ---
 
-# 🤓 How do we address that?
+# 🤓 How can we achieve that?
 
 <figure>
     <img
         class="mx-auto"
-        src="/public/img/subset_generator.svg" 
+        src="/public/img/general_subset_generator.svg" 
         alt="Subset generator"
     />
     <figcaption> <span> Figure 2: </span> ShEx-based <it> subset </it> generation process for Alan Turing's example </figcaption>
@@ -81,23 +68,10 @@ layout: diagram
 
 <h1> 👨‍💻 Pregel<sup>1</sup> </h1>
 
-- Graph processing framework.
-- Developed by Google.
-- Based on Bulk Synchronous Parallel model.
+- **Graph processing** framework.
+- Bulk Synchronous Parallel.
 - Uses message passing.
-- Distributed.
 - _Thinking like a vertex_.
-
-<div class="flex flex-row gap-4">
-    <figure>
-        <img width="150" src="/public/img/konigsberg_abstract.png" alt="Abstract bridges representation" class="mx-auto" />
-        <figcaption> <span> Figure 1: </span> Abstract representation of the Königsberg bridges problem </figcaption>
-    </figure>
-    <figure>
-        <img width="150" src="/public/img/konigsberg_graph.png" alt="Graph representation" class="mx-auto" />
-        <figcaption> <span> Figure 2: </span> Graph representation of the problem  </figcaption>
-    </figure>
-</div>
 
 <Footnotes separator>
     <Footnote :number=1>
@@ -117,24 +91,13 @@ layout: diagram
 </figure>
 
 ---
-layout: quote
----
-
-## "Do not communicate by sharing memory; instead, share memory by communicating."
-[Effective Go](https://go.dev/doc/effective_go#concurrency)
-
----
-layout: two-cols-unbalanced
----
 
 # 🧮 PSchema
 
-- **P**regel-based **Schema** validation algorithm.
-- **Validates** Knowledge Graphs.
+- **P**regel-based **Schema** validation algorithm for Knowledge Graphs.
 - Based on a **multithreaded** Pregel.
-- Makes use of **Shape Expressions**.
-- Can validate different **Knowledge Graphs**.
-- ⚠️ _Partial support_ for **ShEx** functionalities.
+- **Shape Expressions**.
+- Can validate different types of **Knowledge Graphs**.
 
 ## 💭 Alternatives
 
@@ -142,9 +105,33 @@ layout: two-cols-unbalanced
 - [wdumper](https://github.com/bennofs/wdumper)
 - [sparkwdsub](https://github.com/weso/sparkwdsub)
 
-::right::
+---
 
-<img src="/public/img/pschema.png" alt="PSchema" class="h-full m-auto"/>
+# ⌨️ The algorithm in detail
+
+```rust
+fn pschema(g: Graph, tree: Tree) -> Graph {
+    let initial_messages = None;
+    let max_iterations = // see the Convergence Lemma
+    Pregel(g, max_iterations, initial_messages, send_messages, aggregate_messages, vertex_program)
+}
+
+fn send_messages(g: Graph, level: TreeLevel) -> Messages {
+    let messages = Vec::new(); // Growable array type
+    for shape in level {
+        messages.push(shape.validate(g)); // The validate function depends on the type of the Shape Expression
+    }
+    messages
+}
+
+fn aggregate_messages(messages: Messages) -> Messages {
+    messages.filter(|message| message != None)
+}
+
+fn vertex_program(g: Graph, messages: Messages) -> Graph {
+    g.vertices.concatenate(messages)
+}
+```
 
 ---
 layout: diagram-header
@@ -154,26 +141,10 @@ layout: diagram-header
 
 ::left::
 
-- A Shape Expression is represented as a 🌳.
+- Shapes are represented as a 🌳.
 - Each node represents a **Shape**.
 - **Validation** is done by traversing the tree.
-- Shapes are implemented depending on their **behavior** when being _validated_..
-
-The following is an example of a Shape Expression:
-
-```turtle
-:Person {
-	:placeOfBirth @:Place ;
-	:dateOfBirth @:Date ;
-	:employer @:Organization ;
-}
-:Place {
-	:country @:Country
-}
-:Country {}
-:Organization {}
-:Date {}
-```
+- The validating behaviour of Shapes is key.
 
 ::right::
 
@@ -194,47 +165,31 @@ layout: diagram-header
 
 ::left::
 
-- **Level order traversal** visits the nodes of a tree level by level, same as _breadth-first search_.
 - **_Reverse_ level order traversal** visits the nodes of a tree level by level, but in _reverse_ order.
-- Is used to traverse the **Shape Expression tree**.
-- For each _superstep_ of the Pregel, the algorithm traverses **one** level of the tree.
 
-<Footnotes separator>
-    <Footnote :number=1>
-    <it> Reverse </it> level order traversal as implemented in <a href="https://github.com/angelip2303/pschema-rs"> pschema-rs </a>
-    </Footnote>
-</Footnotes>
+- For each _superstep_ of the Pregel, the algorithm traverses **one** level of the tree.
 
 ::right::
 
-<figure>
-    <img
+<img
     class="m-auto"
     src="/public/img/traversal.svg" 
     alt="Tree traversal as implemented in PSchema"
     width="400"
 />
-    <figcaption> <span> Order: </span> h, i, j, k, d, e, f, g, b, c, a  </figcaption>
-</figure>
 
-<style>
-li {
-    padding-bottom: 0.5em;
-}
-</style>
-
+---
+layout: full
 ---
 
 # 0️⃣ The algorithm in action -- Initial Messages
 
-<figure>
-    <img
-        class="mx-auto"
-        src="/public/img/pschema-0.svg" 
-        alt="PSchema algorithm trace"
-    />
-    <figcaption> <span> Figure 5: </span> The Initial Messages are sent to all the nodes in the graph </figcaption>
-</figure>
+<img
+    class="m-auto"
+    src="/public/img/initial_step.svg" 
+    alt="PSchema algorithm trace"
+    width="750"
+/>
 
 ---
 layout: big-diagram
@@ -246,7 +201,7 @@ layout: big-diagram
 
 <img
     class="mx-auto"
-    src="/public/img/pschema-1_1.svg" 
+    src="/public/img/send_messages_first.svg" 
     alt="PSchema algorithm trace"
 />
 
@@ -254,7 +209,7 @@ layout: big-diagram
 
 <img
     class="mx-auto"
-    src="/public/img/tree-1.svg" 
+    src="/public/img/first_tree.svg" 
     alt="Shape Expression tree"
 />
 
@@ -276,7 +231,7 @@ layout: big-diagram
 
 <img
     class="mx-auto"
-    src="/public/img/pschema-1_2.svg" 
+    src="/public/img/agg_messages_first.svg" 
     alt="PSchema algorithm trace"
 />
 
@@ -284,7 +239,7 @@ layout: big-diagram
 
 <img
     class="mx-auto"
-    src="/public/img/tree-1.svg" 
+    src="/public/img/first_tree.svg" 
     alt="Shape Expression tree"
 />
 
@@ -298,7 +253,7 @@ layout: big-diagram
 
 <img
     class="mx-auto"
-    src="/public/img/pschema-1_3.svg" 
+    src="/public/img/vertex_program_first.svg" 
     alt="PSchema algorithm trace"
 />
 
@@ -306,7 +261,7 @@ layout: big-diagram
 
 <img
     class="mx-auto"
-    src="/public/img/tree-1.svg" 
+    src="/public/img/first_tree.svg" 
     alt="Shape Expression tree"
 />
 
@@ -320,7 +275,7 @@ layout: big-diagram
 
 <img
     class="mx-auto"
-    src="/public/img/pschema-2_1.svg" 
+    src="/public/img/send_messages_second.svg" 
     alt="PSchema algorithm trace"
 />
 
@@ -328,7 +283,7 @@ layout: big-diagram
 
 <img
     class="mx-auto"
-    src="/public/img/tree-2.svg" 
+    src="/public/img/second_tree.svg" 
     alt="Shape Expression tree"
 />
 
@@ -342,7 +297,7 @@ layout: big-diagram
 
 <img
     class="mx-auto"
-    src="/public/img/pschema-2_2.svg" 
+    src="/public/img/agg_messages_second.svg" 
     alt="PSchema algorithm trace"
 />
 
@@ -350,7 +305,7 @@ layout: big-diagram
 
 <img
     class="mx-auto"
-    src="/public/img/tree-2.svg" 
+    src="/public/img/second_tree.svg" 
     alt="Shape Expression tree"
 />
 
@@ -365,7 +320,7 @@ layout: big-diagram
 
 <img
     class="mx-auto"
-    src="/public/img/pschema-2_3.svg" 
+    src="/public/img/vertex_program_second.svg" 
     alt="PSchema algorithm trace"
 />
 
@@ -373,7 +328,7 @@ layout: big-diagram
 
 <img
     class="mx-auto"
-    src="/public/img/tree-2.svg" 
+    src="/public/img/second_tree.svg" 
     alt="Shape Expression tree"
 />
 
@@ -388,7 +343,7 @@ layout: big-diagram
 
 <img
     class="mx-auto"
-    src="/public/img/pschema-3_1.svg" 
+    src="/public/img/send_messages_third.svg" 
     alt="PSchema algorithm trace"
 />
 
@@ -396,17 +351,9 @@ layout: big-diagram
 
 <img
     class="mx-auto"
-    src="/public/img/tree-3.svg"
+    src="/public/img/third_tree.svg"
     alt="Shape Expression tree"
 />
-
-::bottom::
-
-<Footnotes separator>
-    <Footnote :number=1>
-        In the actual implementation, the message is sent by the <it> first </it> node in the DataFrame.
-    </Footnote>
-</Footnotes>
 
 ---
 layout: big-diagram
@@ -418,7 +365,7 @@ layout: big-diagram
 
 <img
     class="mx-auto"
-    src="/public/img/pschema-3_2.svg" 
+    src="/public/img/agg_messages_third.svg" 
     alt="PSchema algorithm trace"
 />
 
@@ -426,7 +373,7 @@ layout: big-diagram
 
 <img
     class="mx-auto"
-    src="/public/img/tree-3.svg"
+    src="/public/img/third_tree.svg"
     alt="Shape Expression tree"
 />
 
@@ -440,7 +387,7 @@ layout: big-diagram
 
 <img
     class="mx-auto"
-    src="/public/img/pschema-3_3.svg" 
+    src="/public/img/vertex_program_third.svg" 
     alt="PSchema algorithm trace"
 />
 
@@ -448,7 +395,7 @@ layout: big-diagram
 
 <img
     class="mx-auto"
-    src="/public/img/tree-3.svg"
+    src="/public/img/third_tree.svg"
     alt="Shape Expression tree"
 />
 
@@ -458,8 +405,9 @@ layout: big-diagram
 
 <img
     class="mx-auto"
-    src="/public/img/pschema-4.svg" 
+    src="/public/img/result.svg" 
     alt="PSchema algorithm trace"
+    width="750"
 />
 
 ---
@@ -484,141 +432,24 @@ em {
 </style>
 
 ---
-layout: section
+layout: center
 ---
 
-# 🚀 Optimizations
+# 🚄 Optimizations
 
----
-layout: two-cols-bottom
----
+- Dictionary encoding
+- Efficient caching
+- Columnar storage
 
-# 🗃️ How is the dataset stored?
-
-::left::
-
-<h2> 📦 Row-oriented </h2>
-
-- Each **row** contains _heterogeneous_ data (i.e JSON)
-- **Row stores** are good for _transactional_ workloads
-- JSON (i.e. Wikidata) introduces **boilerplate**.
-
-<img
-    class="mx-auto"
-    src="/public/img/row.svg" 
-    alt="Row-oriented storage"
-/>
-
-::right::
-
-<h2> 📦 Column-oriented<sup>1</sup> </h2>
-
-- Each **column** contains _homogeneous_ data
-- **Columnar stores** are good for _analytical_ workloads
-- DuckDB is a column-oriented database
-
-<img
-    class="mx-auto"
-    src="/public/img/col.svg" 
-    alt="Columnar-oriented storage"
-    height="300px"
-/>
-
-This allows us to implement some **optimizations**...
-
-::bottom::
-
-<Footnotes separator>
-    <Footnote :number=1>
-    <a href="https://github.com/angelip2303/wd2duckdb"> wd2duckdb </a> aims for giving support to the column-oriented database DuckDB for storing Wikidata dumps.
-    </Footnote>
-</Footnotes>
-
-
----
-layout: two-cols-bottom
----
-
-# 🔁 Move-to-Front Coding and Caching
-
-::left::
-
-The **Move-to-Front Coding** is a **lossless** _transformation algorithm_ which processes a sequence of symbols and produces a sequence of integers.
-
-The **idea** is that the most recently used symbols are more likely to be used again in the near future. Hence, we can maintain a list of those and when one is used, it is moved to the front of the list.
-
-1. This allows us to **exploit the locality** of data
-2. **;ost frequent** items will require **fewer bits**
-3. **Cache** misses are **less likely** to happen
-
-👀 `Integers` _usually_ require **less bytes** to be stored than `Strings`: _cache efficiency_.
-
-<style>
-.slidev-layout ol {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}   
-
-ol li {
-    padding-left: 1rem;
-    text-indent: -0.75rem;
-}
-
-ol li::before {
-    content: "😲 ";
-}
-
-ol li:nth-child(2)::before {
-    content: '🤏 ';
-}
-
-ol li:nth-child(3)::before {
-    content: '😎 ';
-}
-</style>
-
-::right::
-
-#### i.e Encoding<sup>1</sup> the string _panama_
-
-| **input** |  **output**  | **list**                   |
-|-----------|--------------|----------------------------|
-| p         | 15           | abcdefghijklmnopqrstuvwxyz |
-| a         | 15 1         | pabcdefghijklmnoqrstuvwxyz |
-| n         | 15 1 14      | apbcdefghijklmnoqrstuvwxyz |
-| a         | 15 1 14 1    | napbcdefghijklmoqrstuvwxyz |
-| m         | 15 1 14 1 14 | anpbcdefghijklmoqrstuvwxyz |
-| a         | 15 1 14 1 14 | manpbcdefghijkloqrstuvwxyz |
-
-<style>
-h4 {
-    margin-left: 1em;
-}
-table {
-    margin-left: 1em;
-}
-</style>
-
-::bottom::
-
-<Footnotes separator>
-    <Footnote :number=1>
-        <a href="https://www.geeksforgeeks.org/move-front-data-transform-algorithm/"> https://www.geeksforgeeks.org/move-front-data-transform-algorithm/ </a>
-    </Footnote>
-</Footnotes>
-
-<style>
-ul li::before {
-    content: "";
-}
-</style>
 
 ---
 layout: section
 ---
 
-# 📢 Diffusion
+# 🧪 Experiments
+
+- ## 🧬 Uniprot
+- ## 📖 Wikidata
 
 ---
 
@@ -673,11 +504,20 @@ layout: three-images
 layout: center
 ---
 
+# 🔚 Conclusions
+
+- 
+
+
+---
+layout: center
+---
+
 # 🔮 Applications and Future Work
 
-- 🔍 Semantic Search Engine
-- 🔗 Data Integration
 - 💻 Processing large datasets in computers with limited resources
+- 🔁 Including support for Recursive Shapes
+- Early prune strategy
 
 ---
 layout: end
