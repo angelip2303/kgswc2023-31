@@ -63,34 +63,6 @@ layout: section
 # 🔍 The algorithm in a nutshell
 
 ---
-layout: diagram
----
-
-<h1> 👨‍💻 Pregel<sup>1</sup> </h1>
-
-- **Graph processing** framework.
-- Bulk Synchronous Parallel.
-- Uses message passing.
-- _Thinking like a vertex_.
-
-<Footnotes separator>
-    <Footnote :number=1>
-    Pregel as implemented in <a href="https://github.com/angelip2303/pregel-rs"> pregel-rs </a>
-    </Footnote>
-</Footnotes>
-
-::right::
-
-<figure>
-    <img
-        class="mx-auto"
-        src="/public/img/pregel.svg" 
-        alt="Pregel model"
-    />
-    <figcaption> <span> Figure 3: </span> Pregel model as implemented in pregel-rs </figcaption>
-</figure>
-
----
 
 # 🧮 PSchema
 
@@ -132,6 +104,34 @@ fn vertex_program(g: Graph, messages: Messages) -> Graph {
     g.vertices.concatenate(messages)
 }
 ```
+
+---
+layout: diagram
+---
+
+<h1> 👨‍💻 Pregel<sup>1</sup> </h1>
+
+- **Graph processing** framework.
+- Bulk Synchronous Parallel.
+- Uses message passing.
+- _Thinking like a vertex_.
+
+<Footnotes separator>
+    <Footnote :number=1>
+    Pregel as implemented in <a href="https://github.com/angelip2303/pregel-rs"> pregel-rs </a>
+    </Footnote>
+</Footnotes>
+
+::right::
+
+<figure>
+    <img
+        class="mx-auto"
+        src="/public/img/pregel.svg" 
+        alt="Pregel model"
+    />
+    <figcaption> <span> Figure 3: </span> Pregel model as implemented in pregel-rs </figcaption>
+</figure>
 
 ---
 layout: diagram-header
