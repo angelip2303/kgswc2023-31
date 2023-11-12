@@ -15,7 +15,7 @@ image: /img/cover.png
 </div>
 
 <div>
-  	<h1 class="font-extrabold">Creating Knowledge Graph Subsets</h1>
+  	<h1 style="font-size: 2.5em">Creating Knowledge Graph Subsets</h1>
   	<p class="font-300">
         Using Pregel to Create Knowledge
         Graphs Subsets Described
@@ -506,7 +506,10 @@ layout: center
 
 # 🔚 Conclusions
 
-- 
+- 🆕 A new approach for validating Knowledge graphs is presented
+- ✨ Enhanced data quality and interoperability
+- 🗚 Scalability and performance
+- 🪨 Challenges and limitations
 
 
 ---
@@ -517,7 +520,7 @@ layout: center
 
 - 💻 Processing large datasets in computers with limited resources
 - 🔁 Including support for Recursive Shapes
-- Early prune strategy
+- ✂️ Early prune strategy
 
 ---
 layout: end
@@ -526,8 +529,6 @@ layout: end
 ---
 layout: center
 ---
-
-# 💁‍♂️ Supported Shape Expression features
 
 | **Feature**                      | **Supported** | **PSchema Representation** |
 |----------------------------------|:-------------:|--------|
