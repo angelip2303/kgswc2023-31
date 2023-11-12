@@ -118,7 +118,7 @@ layout: diagram
 
 <Footnotes separator>
     <Footnote :number=1>
-    Pregel as implemented in <a href="https://github.com/angelip2303/pregel-rs"> pregel-rs </a>
+    Pregel as implemented in <a href="https://github.com/weso/pregel-rs"> pregel-rs </a>
     </Footnote>
 </Footnotes>
 
@@ -141,7 +141,7 @@ layout: diagram-header
 
 ::left::
 
-- Shapes are represented as a 🌳.
+- Shapes are represented as a tree.
 - Each node represents a **Shape**.
 - **Validation** is done by traversing the tree.
 - The validating behaviour of Shapes is key.
@@ -507,8 +507,12 @@ layout: section
 # 🔚 Conclusions
 
 ---
+layout: diagram-footer
+---
 
-# 🔧 The tool
+<h1> 🔧 The tool<sup>1</sup> </h1>
+
+::content::
 
 <img
     class="m-auto h-full w-full"
@@ -516,22 +520,19 @@ layout: section
     alt="Conclusions"
 />
 
----
-layout: center
----
+::footer::
 
-# 📓 To wrap up
-
-- 🆕 A new approach for validating Knowledge graphs is presented
-- ✨ Enhanced data quality and interoperability
-- 🗚 Scalability and performance
-- 🪨 Challenges and limitations
+<Footnotes separator>
+    <Footnote :number=1>
+    <a href="https://github.com/weso/pschema"> PSchema </a> is implemented in Rust.
+    </Footnote>
+</Footnotes>
 
 ---
 layout: center
 ---
 
-# 🔮 Applications and Future Work
+# 🔮 Future Work
 
 - 💻 Processing large datasets in computers with limited resources
 - 🔁 Including support for Recursive Shapes
@@ -574,11 +575,133 @@ layout: center
 |    NTriples Export  | ✅ |     ---     |
 
 ---
+layout: two-cols-bottom
+---
+
+# 🗃️ How is the dataset stored?
+
+::left::
+
+<h2> 📦 Row-oriented </h2>
+
+- Each **row** contains _heterogeneous_ data
+- **Row stores** for _transactional_ workloads
+- JSON introduces **boilerplate**.
+
+<img
+    class="mx-auto"
+    src="/public/img/row.svg" 
+    alt="Row-oriented storage"
+/>
+
+::right::
+
+<h2> 📦 Column-oriented<sup>1</sup> </h2>
+
+- **Columns** contains _homogeneous_ data
+- **Columnar stores** for _analytical_ workloads
+- DuckDB is a column-oriented database
+
+<img
+    class="mx-auto"
+    src="/public/img/col.svg" 
+    alt="Columnar-oriented storage"
+    height="300px"
+/>
+
+::bottom::
+
+<Footnotes separator>
+    <Footnote :number=1>
+    <a href="https://github.com/weso/wd2duckdb"> wd2duckdb </a> aims for giving support to the column-oriented database DuckDB for storing Wikidata dumps.
+    </Footnote>
+</Footnotes>
+
+
+---
+layout: two-cols-bottom
+---
+
+# 🔁 Move-to-Front Coding and Caching
+
+::left::
+
+The **Move-to-Front Coding** is a **lossless** _transformation algorithm_ which processes a sequence of symbols and produces a sequence of integers. The **idea** is that the most recently used symbols are more likely to be used again in the near future. Hence, we can maintain a list of those and when one is used, it is moved to the front of the list.
+
+1. This allows us to **exploit the locality**
+2. **Most frequent** items require **fewer bits**
+3. **Cache** misses are **less likely** to happen
+
+👀 `Integers` _usually_ require **less bytes** to be stored than `Strings`: _cache efficiency_.
+
+<style>
+.slidev-layout ol {
+    list-style: none;
+    padding: 0;
+    margin: -1em;
+}   
+
+ol li {
+    padding-left: 1rem;
+    text-indent: -0.75rem;
+}
+
+ol li::before {
+    content: "😲 ";
+}
+
+ol li:nth-child(2)::before {
+    content: '🤏 ';
+}
+
+ol li:nth-child(3)::before {
+    content: '😎 ';
+}
+</style>
+
+::right::
+
+#### i.e Encoding<sup>1</sup> the string _panama_
+
+| **input** |  **output**  | **list**                   |
+|-----------|--------------|----------------------------|
+| p         | 15           | abcdefghijklmnopqrstuvwxyz |
+| a         | 15 1         | pabcdefghijklmnoqrstuvwxyz |
+| n         | 15 1 14      | apbcdefghijklmnoqrstuvwxyz |
+| a         | 15 1 14 1    | napbcdefghijklmoqrstuvwxyz |
+| m         | 15 1 14 1 14 | anpbcdefghijklmoqrstuvwxyz |
+| a         | 15 1 14 1 14 | manpbcdefghijkloqrstuvwxyz |
+
+<style>
+h4 {
+    margin-left: 1em;
+}
+table {
+    margin-left: 1em;
+}
+</style>
+
+::bottom::
+
+<Footnotes separator>
+    <Footnote :number=1>
+        <a href="https://www.geeksforgeeks.org/move-front-data-transform-algorithm/"> https://www.geeksforgeeks.org/move-front-data-transform-algorithm/ </a>
+    </Footnote>
+</Footnotes>
+
+<style>
+ul li::before {
+    content: "";
+}
+</style>
+
+
+---
 layout: center
 ---
 
 # 🔗 Links
 
-- [wd2duckdb](https://github.com/angelip2303/wd2duckdb)
-- [pregel-rs](https://github.com/angelip2303/pregel-rs)
-- [pschema-rs](https://github.com/angelip2303/pschema-rs)
+- [wd2duckdb](https://github.com/weso/wd2duckdb)
+- [pregel-rs](https://github.com/weso/pregel-rs)
+- [pschema-rs](https://github.com/weso/pschema-rs)

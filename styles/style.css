@@ -1,3 +1,7 @@
 p, li {
     font-size: larger;
 }
+
+svg p {
+    font-size: medium;
+}
