@@ -501,16 +501,31 @@ layout: three-images
 />
 
 ---
-layout: center
+layout: section
 ---
 
 # 🔚 Conclusions
+
+---
+
+# 🔧 The tool
+
+<img
+    class="m-auto h-full w-full"
+    src="/public/img/conclusions.svg" 
+    alt="Conclusions"
+/>
+
+---
+layout: center
+---
+
+# 📓 To wrap up
 
 - 🆕 A new approach for validating Knowledge graphs is presented
 - ✨ Enhanced data quality and interoperability
 - 🗚 Scalability and performance
 - 🪨 Challenges and limitations
-
 
 ---
 layout: center
